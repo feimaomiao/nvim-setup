@@ -99,8 +99,10 @@ require('lazy').setup({
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
-  
+ 
+  {'windwp/nvim-autopairs'},
   -- catppuccin views >>>>>
+
   { "catppuccin/nvim", name = "catppuccin" },
 
   { -- Adds git releated signs to the gutter, as well as utilities for managing changes
@@ -199,7 +201,13 @@ require('lazy').setup({
 vim.opt.termguicolors = true
 
 vim.cmd.colorscheme "catppuccin"
-
+require("catppuccin").setup({
+    integrations = {
+    treesitter=true,
+    notify=true,
+    neotree=true
+    }
+})
 -- OR setup with some options
 require("nvim-tree").setup({
   sort_by = "case_sensitive",
@@ -287,6 +295,8 @@ require('telescope').setup {
   },
 }
 require("telescope").load_extension("notify")
+
+require("nvim-autopairs").setup() 
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
@@ -520,6 +530,25 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
-
+require('lualine').setup{
+  options = {
+    icons_enabled = true,
+    theme = 'auto',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+    }
+  }
+}
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
