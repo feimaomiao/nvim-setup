@@ -60,10 +60,13 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Setup default plugins
-require('lazy').setup("defaults")
--- custom plugins would go here
-require('lazy').setup("custom")
-
+require('lazy').setup({
+  spec = {
+    { import = "defaults" },
+    -- custom imports would go here
+    { import = "custom" }
+  }
+})
 -- Setup different plugins
 
 -- [[ Configure telescope ]]
@@ -80,6 +83,9 @@ require('telescope').setup {
 require("telescope").load_extension("notify")
 
 pcall(require('telescope').load_extension, 'fzf')
+
+-- [[ Configure autopair ]]
+require("nvim-autopairs").setup()
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -146,6 +152,26 @@ require('nvim-treesitter.configs').setup {
     },
   },
 }
+
+-- [[ Configure noice ]]
+require("noice").setup({
+  lsp = {
+    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+    override = {
+      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      ["vim.lsp.util.stylize_markdown"] = true,
+      ["cmp.entry.get_documentation"] = true,
+    },
+  },
+  -- you can enable a preset for easier configuration
+  presets = {
+    bottom_search = true,         -- use a classic bottom cmdline for search
+    command_palette = true,       -- position the cmdline and popupmenu together
+    long_message_to_split = true, -- long messages will be sent to a split
+    inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+    lsp_doc_border = false,       -- add a border to hover docs and signature help
+  },
+})
 
 local on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
