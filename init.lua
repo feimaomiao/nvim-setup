@@ -3,8 +3,6 @@
 -- Author: Cheuk Pui Lam (@feimaomiao)
 -- This is a rewrite of kickstart.nvim
 --]]
--- initialize vim so no warnings
-vim = vim
 -- set space as leader key because this is very important
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -24,7 +22,6 @@ vim.o.timeoutlen = 300
 -- Line numbers and relative line numbers
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.signcolumn = "number"
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -43,7 +40,6 @@ vim.o.ignorecase = true
 
 -- setup clipboard
 vim.o.clipboard = 'unnamedplus'
-
 -- Installing lazy if it isn't already installed
 -- https://github.com/folke/lazy.nvim#-installation
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -58,6 +54,9 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+
+
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Setup default plugins
 require('lazy').setup({
@@ -80,7 +79,6 @@ require('telescope').setup {
     },
   },
 }
-require("telescope").load_extension("notify")
 
 pcall(require('telescope').load_extension, 'fzf')
 
@@ -94,7 +92,7 @@ require('nvim-treesitter.configs').setup {
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-  auto_install = false,
+  auto_install = true,
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
@@ -165,7 +163,7 @@ require("noice").setup({
   },
   -- you can enable a preset for easier configuration
   presets = {
-    bottom_search = true,         -- use a classic bottom cmdline for search
+    bottom_search = false,        -- use a classic bottom cmdline for search
     command_palette = true,       -- position the cmdline and popupmenu together
     long_message_to_split = true, -- long messages will be sent to a split
     inc_rename = false,           -- enables an input dialog for inc-rename.nvim
@@ -218,7 +216,7 @@ end
 -- [[ Configure mason ]]
 -- Language servers`
 local servers = {
-  -- clangd = {},
+  clangd = {},
   -- gopls = {},
   pyright = {},
   -- rust_analyzer = {},
@@ -228,6 +226,7 @@ local servers = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
+      diagnostics = { globals = {'vim'} }
     },
   },
 }
@@ -305,15 +304,20 @@ vim.cmd.colorscheme "catppuccin"
 
 -- Keymaps
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+-- copies the most recent git commit hash
+vim.keymap.set('n', '<leader>gh', '<cmd>!git rev-parse HEAD | pbcopy<cr>', { desc = '[G]it files [H]ash' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>f', '<cmd>NvimTreeToggle<cr>', { desc = '[F]older' })
+vim.keymap.set('n', '<leader>ft', '<cmd>NvimTreeToggle<cr>', { desc = '[F]older [T]oggle' })
+vim.keymap.set('n', '<leader>ff', '<cmd>NvimTreeFocus<cr>', { desc = '[F]older [F]ocus' })
+vim.keymap.set('n', '<leader>dg', '<cmd>DogeGenerate<cr>', { desc = '[D]oge[G]enerate' })
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })

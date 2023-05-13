@@ -4,6 +4,9 @@
 -- Adds additional commands as well to manage the behavior
 
 return {
+  -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-sleuth',
+
   'neovim/nvim-lspconfig',
   config = function()
     -- Switch for controlling whether you want autoformatting.

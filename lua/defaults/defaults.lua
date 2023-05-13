@@ -1,4 +1,15 @@
 return {
+  { 'nvim-lua/plenary.nvim' },
+  { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
+  {
+    'nvim-telescope/telescope-fzf-native.nvim',
+    -- NOTE: If you are having trouble with this installation,
+    --       refer to the README for telescope-fzf-native for more instructions.
+    build = 'make',
+    cond = function()
+      return vim.fn.executable 'make' == 1
+    end,
+  },
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -24,5 +35,17 @@ return {
       'nvim-tree/nvim-web-devicons'
     },
     opts = {}
+  },
+  {
+    "folke/which-key.nvim",
+    config = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+      require("which-key").setup({
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      })
+    end,
   }
 }
